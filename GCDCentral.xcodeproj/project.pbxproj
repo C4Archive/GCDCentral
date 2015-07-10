@@ -290,6 +290,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_SWIFT_FLAGS = "-D DEBUG";
 				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -339,6 +340,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = GCDCentral/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				OTHER_SWIFT_FLAGS = "-D DEBUG";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "GCDCentral/GCDCentral-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -353,6 +355,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = GCDCentral/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "GCDCentral/GCDCentral-Bridging-Header.h";
 			};
@@ -413,6 +416,7 @@
 				1FB46F321B4F36720017345C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		1FB46F331B4F36720017345C /* Build configuration list for PBXNativeTarget "GCDCentralTests" */ = {
 			isa = XCConfigurationList;
@@ -421,6 +425,7 @@
 				1FB46F351B4F36720017345C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -8,6 +8,12 @@
 
 import Cocoa
 
+func Dlog(message: String, function: String = __FUNCTION__) {
+    #if DEBUG
+        println("\(function): \(message)")
+    #endif
+}
+
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, NSNetServiceDelegate, GCDAsyncSocketDelegate {
     var netService : NSNetService?
@@ -17,51 +23,37 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSNetServiceDelegate, GCDAsy
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         asyncSocket = GCDAsyncSocket(delegate: self, delegateQueue: dispatch_get_main_queue())
 
-        var err : NSError?
-
-        if asyncSocket?.acceptOnPort(0, error: &err) == true {
+        var error : NSError?
+        if asyncSocket?.acceptOnPort(0, error: &error) == true {
             if let port : UInt16 = asyncSocket?.localPort {
                 netService = NSNetService(domain: "local.", type: "_m-o._tcp.", name: "m-o-centralService", port: Int32(port))
-
                 netService?.delegate = self
                 netService?.publish()
             }
         } else {
-            println("Error in acceptOnPort:error: -> \(err)")
+            Dlog("Error in acceptOnPort:error: -> \(error)")
         }
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("test:"), name: "down", object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("test:"), name: "dragged", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("relayMouseEvent:"), name: "down", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("relayMouseEvent:"), name: "dragged", object: nil)
     }
 
-    func test(notification: NSNotification) {
-
-        var location = "-"
+    func relayMouseEvent(notification: NSNotification) {
+        var location = ""
         if let info = notification.userInfo as? Dictionary<String,NSEvent> {
-            // Check if value present before using it
             if let event = info["event"] {
-                location = "-\(event.locationInWindow)"
-                println(location)
+                location += "\(event.locationInWindow)"
             }
             else {
-                print("no value for key\n")
+                println("no value for key")
             }
         }
         else {
-            print("wrong userInfo type")
+            println("wrong userInfo type")
         }
 
-
-        let test = "\(notification.name)-\(location)".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
-        let md = NSMutableData()
-
-        md.appendData(test!)
-        md.appendData(GCDAsyncSocket.CRLFData())
-
-        for socket in connectedSockets {
-            socket.writeData(md, withTimeout: -1, tag: 0)
-            socket.readDataToData(GCDAsyncSocket.CRLFData(), withTimeout: -1, tag: 0)
-        }
+        let message = "\(notification.name):\(location)"
+        writeToSockets(connectedSockets, message: message)
     }
 
     func applicationShouldTerminate(sender: NSApplication) -> NSApplicationTerminateReply {
@@ -79,15 +71,27 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSNetServiceDelegate, GCDAsy
     }
 
     func socket(sock: GCDAsyncSocket!, didAcceptNewSocket newSocket: GCDAsyncSocket!) {
-        println("Accepted new socket from \(newSocket.connectedHost):\(newSocket.connectedPort)")
-
-        let handshake = "handshake-from-central".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
-        let md = NSMutableData()
-        md.appendData(handshake!)
-        md.appendData(GCDAsyncSocket.CRLFData())
-        newSocket.writeData(md, withTimeout: -1, tag: 0)
-        newSocket.readDataToData(GCDAsyncSocket.CRLFData(), withTimeout: -1, tag: 0)
+        Dlog("Accepted new socket from \(newSocket.connectedHost):\(newSocket.connectedPort)")
         connectedSockets.append(newSocket)
+        writeTo(newSocket, message: "handshake-from-central")
+    }
+
+    func writeTo(sock: GCDAsyncSocket, message: String) {
+        let data = NSMutableData(data: message.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!)
+        data.appendData(GCDAsyncSocket.CRLFData())
+
+        sock.writeData(data, withTimeout: -1, tag: 0)
+        sock.readDataToData(GCDAsyncSocket.CRLFData(), withTimeout: -1, tag: 0)
+    }
+
+    func writeToSockets(sockets: [GCDAsyncSocket], message: String) {
+        let data = NSMutableData(data: message.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!)
+        data.appendData(GCDAsyncSocket.CRLFData())
+
+        for sock in sockets {
+            sock.writeData(data, withTimeout: -1, tag: 0)
+            sock.readDataToData(GCDAsyncSocket.CRLFData(), withTimeout: -1, tag: 0)
+        }
     }
 
     func socketDidDisconnect(sock: GCDAsyncSocket!, withError err: NSError!) {
@@ -101,7 +105,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSNetServiceDelegate, GCDAsy
     func socket(sock: GCDAsyncSocket!, didReadData data: NSData!, withTag tag: Int) {
         println("didRead")
         let s = NSString(data: data, encoding: NSUTF8StringEncoding)
-        println(s)
     }
 
     func socket(sock: GCDAsyncSocket!, didWritePartialDataOfLength partialLength: UInt, tag: Int) {
@@ -109,7 +112,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSNetServiceDelegate, GCDAsy
     }
 
     func socket(sock: GCDAsyncSocket!, didWriteDataWithTag tag: Int) {
-        println("tag \(tag)")
         println("should read")
         sock.readDataWithTimeout(-1, tag: 0)
     }

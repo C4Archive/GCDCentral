@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>4B6355A8-CBE0-438A-93A2-E152B5155A54</string>
+	<key>IDESourceControlProjectName</key>
+	<string>GCDCentral</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>AFBDC71B61F01F76A3D5AA5E44AFE65B3E9BF407</key>
+		<string>https://github.com/C4Framework/GCDCentral.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>GCDCentral.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>AFBDC71B61F01F76A3D5AA5E44AFE65B3E9BF407</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/C4Framework/GCDCentral.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>AFBDC71B61F01F76A3D5AA5E44AFE65B3E9BF407</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>AFBDC71B61F01F76A3D5AA5E44AFE65B3E9BF407</string>
+			<key>IDESourceControlWCCName</key>
+			<string>GCDCentral</string>
+		</dict>
+	</array>
+</dict>
+</plist>
