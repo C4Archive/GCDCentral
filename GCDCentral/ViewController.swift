@@ -8,20 +8,18 @@
 
 import Cocoa
 
-class ViewController: NSViewController {
+public class ViewController: NSViewController {
 
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
     }
 
-    override var representedObject: AnyObject? {
-        didSet {
-        // Update the view, if already loaded.
-        }
+    public override func mouseDown(theEvent: NSEvent) {
+        NSNotificationCenter.defaultCenter().postNotificationName("down", object: self)
     }
 
-
+    public override func mouseDragged(theEvent: NSEvent) {
+        NSNotificationCenter.defaultCenter().postNotificationName("dragged", object: self)
+    }
 }
 
