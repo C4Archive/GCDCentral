@@ -15,11 +15,11 @@ public class ViewController: NSViewController {
     }
 
     public override func mouseDown(theEvent: NSEvent) {
-        NSNotificationCenter.defaultCenter().postNotificationName("down", object: self)
+        NSNotificationCenter.defaultCenter().postNotificationName("down", object: self, userInfo: ["event":theEvent])
     }
 
     public override func mouseDragged(theEvent: NSEvent) {
-        NSNotificationCenter.defaultCenter().postNotificationName("dragged", object: self)
+        NSNotificationCenter.defaultCenter().postNotificationName("dragged", object: self, userInfo: ["event":theEvent])
     }
 }
 

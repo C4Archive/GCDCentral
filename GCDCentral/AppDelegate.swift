@@ -36,16 +36,31 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSNetServiceDelegate, GCDAsy
 
     func test(notification: NSNotification) {
 
-        let test = "\(notification.name)-from-central".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
+        var location = "-"
+        if let info = notification.userInfo as? Dictionary<String,NSEvent> {
+            // Check if value present before using it
+            if let event = info["event"] {
+                location = "-\(event.locationInWindow)"
+                println(location)
+            }
+            else {
+                print("no value for key\n")
+            }
+        }
+        else {
+            print("wrong userInfo type")
+        }
+
+
+        let test = "\(notification.name)-\(location)".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
         let md = NSMutableData()
+
         md.appendData(test!)
         md.appendData(GCDAsyncSocket.CRLFData())
 
         for socket in connectedSockets {
             socket.writeData(md, withTimeout: -1, tag: 0)
             socket.readDataToData(GCDAsyncSocket.CRLFData(), withTimeout: -1, tag: 0)
-            println(test)
-
         }
     }
 
